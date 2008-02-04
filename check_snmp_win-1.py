@@ -2,7 +2,12 @@
 # based on check_snmp_win.pl from http://nagios.manubulon.com/
 # $Revision$
 # $Date$
-# Author$
+# $Author$
+# Description:
+# this version uses disk caching for the result of snmpwalk
+# Depends:
+# netsnmp python bindings, requires netsnmp 5.4.1
+
 
 import os,sys,re
 from optparse import OptionParser
@@ -37,9 +42,6 @@ def xor_state(a='UNKNOWN',b='UNKNOWN'):
 
 
 def arg_parse():
-#"Usage: $Name [-v] -H <host> -C <snmp_community> [-2]
-# [-p <port>] -n <name>[,<name2] [-T=service] [-r] [-s]
-# [-N=<n>] [-t <timeout>] [-V]\n";
     usage="%prog [options] arg"
     parser = OptionParser(usage)
     parser.add_option("-H", "--hostname", dest="hostname",help="name or IP address of host to check",default='localhost')
@@ -56,8 +58,7 @@ def arg_parse():
     ### version
 
     (options, args) = parser.parse_args(args=sys.argv[1:])
-    if len(args)!=0:
-         parser.error("Error in command line options")
+    if len(args)!=0: parser.error("Error in command line options")
     if options.name is None : raise NagiosError,"Option name not defined."
     if options.number<0: raise NagiosError,"Invalid number of services."
     if options.version:
@@ -72,24 +73,12 @@ def arg_parse():
 ########################################################################################################
 
 try:
-    cache=pkg_resources.get_default_cache()
-    if 'root' in cache:
-         os.environ['PYTHON_EGG_CACHE']=os.path.expanduser("~")+"/.python-eggs"
-         pkg_resources.cleanup_resources()
-         pkg_resources.set_extraction_path(os.path.expanduser("~")+"/.python-eggs")
-         pkg_resources.cleanup_resources()
-
-   #import netsnmp
     from pkg_resources import require
     import pkg_resources
     require("netsnmp-python")
     import netsnmp
 except:
     print 'ERROR: netsnmp python library not installed'
-    syslog.syslog(str(sys.exc_info()[0]))
-    syslog.syslog(str(sys.exc_info()[1]))
-    syslog.syslog(str(sys.path))
-    syslog.syslog(pkg_resources.get_default_cache())
     sys.exit(nagios_states[my_sate])
 
 snmp_oids={
