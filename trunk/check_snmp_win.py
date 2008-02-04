@@ -2,7 +2,8 @@
 # based on check_snmp_win.pl from http://nagios.manubulon.com/
 # 
 # $Date$
-# $Source$
+# $Revision$
+# $Rev$
 # Description:
 # this version uses disk caching for the result of snmpwalk
 # Depends:
