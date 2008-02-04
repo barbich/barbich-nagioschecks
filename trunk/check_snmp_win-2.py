@@ -95,7 +95,7 @@ except:
     syslog.syslog(str(sys.exc_info()[1]))
     syslog.syslog(str(sys.path))
     syslog.syslog(pkg_resources.get_default_cache())
-    sys.exit(nagios_states[my_sate])
+    sys.exit(nagios_states[my_state])
 
 snmp_oids={
 "process_table":'.1.3.6.1.2.1.25.4.2.1',

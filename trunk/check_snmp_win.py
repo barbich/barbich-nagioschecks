@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # based on check_snmp_win.pl from http://nagios.manubulon.com/
-# $Revision$
-# $Date$
-# $Author$
+# 
+# $Date: 2008-02-04 14:54:04 +0000 (Mon, 04 Feb 2008) $
+# $Source$
 # Description:
 # this version uses disk caching for the result of snmpwalk
 # Depends:
 # netsnmp python bindings, requires netsnmp 5.4.1
 """Simple plugin to retrieve service status information from a windows host running SNMP.
+
+__author__ = $Author: barbereau $
+__version__ = $Revision: 5 $
 """
 
 import os,sys,re
