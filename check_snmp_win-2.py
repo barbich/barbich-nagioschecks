@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # based on check_snmp_win.pl from http://nagios.manubulon.com/
-# Version: $Revision$
-# Date: $Date$
-# Author: $Author$
+# $Revision$
+# $Date$
+# Author: barbereau $
 import os,sys,re
 from optparse import OptionParser
 from pprint import pprint
