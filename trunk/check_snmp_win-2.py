@@ -2,7 +2,12 @@
 # based on check_snmp_win.pl from http://nagios.manubulon.com/
 # $Revision$
 # $Date$
-# Author: barbereau $
+# $Author$
+# Description:
+# this version uses memcahced caching for the result of snmpwalk
+# Depends:
+# netsnmp python bindings, requires netsnmp 5.4.1
+
 import os,sys,re
 from optparse import OptionParser
 from pprint import pprint
