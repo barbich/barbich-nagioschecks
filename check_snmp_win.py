@@ -3,7 +3,6 @@
 # 
 # $Date$
 # $Revision$
-# $Rev$
 # Description:
 # this version uses disk caching for the result of snmpwalk
 # Depends:
@@ -11,7 +10,21 @@
 """Simple plugin to retrieve service status information from a windows host running SNMP.
 
 __author__ = $Author$
-__version__ = 
+__version__ = $Rev$
+
+Behind the scene:
+To retrieve the state of a service via SNMP in Windows we have first to query the list of services on windows
+and then retrieve the state of the looked up service. The first step is to be done fetching the full tree of services
+from windows , looking up the searched name (direct or regex) and find the associated service ID. This service ID is then used
+to build the specific OID to retrieve the service state and the number of services running (should be one).
+As requesting the full snmp tree of services can be stresful for the poor system we are checking, we are
+going to cache the result localy. Two systems have been implemented for this:
+- either using a static file : per default this is going to be stored in /tmp/nagios-cache/hostname-checkname
+- using memcache: we create a md5 from the hostname checked and the command and use this as a key
+(see http://www.danga.com/memcached/ for more info on memcache)
+From the performance point of view this is the same ...
+
+Idea: use memcache as a object store for nagios ...
 """
 
 import os,sys,re
