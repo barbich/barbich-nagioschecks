@@ -1,2 +1,5 @@
 NAGMAP:
 Django project to generate a tree structure compatible with JIT (http://blog.thejit.org/javascript-information-visualization-toolkit-jit/).
+
+Don't forget to initialise the project in your DB
+
