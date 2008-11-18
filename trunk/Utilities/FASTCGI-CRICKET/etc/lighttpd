@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# lighttpd     Startup script for the lighttpd server
+#
+# chkconfig: - 85 15
+# description: Lightning fast webserver with light system requirements
+#
+# processname: lighttpd
+# config: /etc/lighttpd/lighttpd.conf
+# config: /etc/sysconfig/lighttpd
+# pidfile: /var/run/lighttpd.pid
+#
+# Note: pidfile is assumed to be created
+# by lighttpd (config: server.pid-file).
+# If not, uncomment 'pidof' line.
+
+# Source function library
+. /etc/rc.status
+rc_reset
+
+if [ -f /etc/sysconfig/lighttpd ]; then
+	. /etc/sysconfig/lighttpd
+fi
+
+if [ -f /usr/local/lighttpd/etc/sysconfig.lighttpd ]; then
+	. /usr/local/lighttpd/etc/sysconfig.lighttpd
+fi
+
+if [ -z "$LIGHTTPD_CONF_PATH" ]; then
+	LIGHTTPD_CONF_PATH="/usr/local/lighttpd/etc/lighttpd.conf"
+fi
+
+prog="lighttpd"
+lighttpd="/usr/local/lighttpd/sbin/lighttpd"
+RETVAL=0
+
+start() {
+	return $RETVAL
+}
+
+stop() {
+	return $RETVAL
+}
+
+reload() {
+	echo -n $"Reloading $prog: "
+	killproc $lighttpd -HUP
+	RETVAL=$?
+	echo
+	return $RETVAL
+}
+
+case "$1" in
+	start)
+    	        echo -n $"Starting $prog: "
+	        startproc $lighttpd -f $LIGHTTPD_CONF_PATH
+	        RETVAL=$?
+	        [ $RETVAL -eq 0 ] && touch /var/lock/$prog
+		rc_status -v
+		;;
+	stop)
+        	echo -n $"Stopping $prog: "
+	        killproc $lighttpd
+        	RETVAL=$?
+        	[ $RETVAL -eq 0 ] && rm -f /var/lock/$prog
+		rc_status -v
+		;;
+	restart)
+                $0 stop
+                rm /usr/local/lighttpd/srv/*/access.log > /dev/null 2>&1
+                rm /usr/local/lighttpd/srv/*/error.log > /dev/null 2>&1
+                rm /tmp/lighttpd-*.socket* > /dev/null 2>&1
+                sleep 1
+                $0 start
+		rc_status -v
+		;;
+	condrestart)
+		if [ -f /var/lock/$prog ]; then
+			stop
+			start
+		fi
+		;;
+	reload)
+		reload
+		;;
+	status)
+                echo -n "Checking for service lighttpd: "
+                checkproc $lighttpd
+		rc_status -v
+		RETVAL=$?
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|restart|condrestart|reload|status}"
+		RETVAL=1
+esac
+
+exit $RETVAL
